@@ -40,6 +40,8 @@ Do this silently before producing any output. The review must cover the **full t
 
 **Compiled PDF (strongly recommended):** Ask for the compiled thesis PDF if it is not provided. Several thesis-level checks depend on it: page distances for abbreviation re-introduction (Category F), rendered List of Figures and List of Tables (Category L), figure placement relative to the first reference, and PDF-visible leftovers. If no PDF is available, estimate page distances from the source at roughly 400 words per page and state that the estimate is approximate.
 
+**Build check:** If you compile the thesis yourself (e.g., with the command the user provides), do so in a scratch copy so that auxiliary files do not pollute the user's workspace. Report every LaTeX error as a finding, even when a PDF is still produced: an error such as a package option clash can make `latexmk` stop after the first pass, so that references and citations silently remain unresolved (`??`) unless the build is forced. Report errors that stop the build as CRITICAL and errors that the build survives as MINOR. Review the fully resolved PDF (force the build and run `makeglossaries`/`biber` where needed), and state in the Executive Summary how it was produced.
+
 **University and venue rules:** If the user provides their university's thesis guidelines (formatting rules, abstract word limit, thesis-by-publication requirements, first-person policy, spelling variant), those rules override the defaults in this prompt. Otherwise, mark convention-dependent findings as such.
 
 ---
@@ -80,7 +82,7 @@ If the type is unclear, state your assumption and continue; do not block the rev
 **Phase 2 — Fix:** After the user reviews the list and specifies which issues to fix, apply only the approved ones.
 
 **Phase 2 constraints (apply when making any edit):**
-- **No em dashes** (`—`) in fixes. Use a comma, semicolon, colon, or restructure the sentence instead:
+- **No em dashes** (`—`, `---`, or `--` used as punctuation) in fixes. Use a comma, semicolon, colon, or restructure the sentence instead:
   - ❌ `"Our method — which is fast — achieves..."` → ✅ `"Our method, which is fast, achieves..."`
   - ❌ `"The result is clear — we outperform all baselines."` → ✅ `"The result is clear: we outperform all baselines."`
 - **Apply only approved findings.** Do not silently fix unapproved neighboring issues.
@@ -89,7 +91,12 @@ If the type is unclear, state your assumption and continue; do not block the rev
 - **Structural findings need confirmation.** For findings that imply moving, merging, or splitting chapters or sections (typically Categories A, B, and G), propose the concrete change and wait for a second confirmation before restructuring files.
 - After edits, summarize what changed, list every newly written sentence so the author can check it, and note anything intentionally left untouched.
 
-> **Phase 1 — Em-dash detection (Category I):** During detection, flag every em dash (`—`) in the thesis as STYLE. Em dashes in academic writing are a known signal of AI-generated text and should be replaced with a comma, colon, semicolon, or restructured sentence. For a long thesis, report each file's occurrences as one grouped finding with all line numbers.
+> **Phase 1 — Dash detection (Category I):** During detection, flag every dash used as sentence punctuation as STYLE. Em dashes in academic writing are a known signal of AI-generated text and should be replaced with a comma, colon, semicolon, parentheses, or a restructured sentence. Search the source directly for all forms, not only the Unicode character:
+> - Unicode dashes: `—` (em dash, U+2014), `―` (horizontal bar, U+2015), and `–` (en dash, U+2013) when used between words rather than in ranges
+> - LaTeX dashes: `---` (em dash), and `--` when it is used as parenthetical punctuation (`"the event rate -- a metric -- and"`, with or without spaces), plus `\textemdash` and `\textendash`
+> - Do **not** flag `--` in numeric or named ranges (`1--4`, `pp.~3--7`, `day--night`, `query--reference`), which is the correct use of an en dash
+>
+> For a long thesis, report each file's occurrences as one grouped finding with all line numbers.
 
 ---
 
@@ -261,6 +268,9 @@ In a paper, the reader holds the motivation in mind for eight pages. In a 200-pa
 - **Forward references that assume later content** — flag places where the text relies on something only explained later without a forward pointer.
   - ❌ `"Before the introduction of our method, a novel module is proposed"` (inverted logic)
 - **Stale forward and backward references** — `"as we show in Chapter 6"` where Chapter 6 does not show this, or `"as discussed earlier"` where it was not discussed. Flag as CRITICAL; these are common after chapters are reordered.
+- **References that resolve to the wrong target (CRITICAL)** — a reference compiles but points to the wrong figure, table, equation, or section. This typically happens when papers are merged into a thesis and each paper used the same generic label (`fig:teaser`, `fig:overview`, `tab:results`, `sec:method`): LaTeX warns about a duplicate label only when both are defined, and silently resolves to whichever exists when one was renamed. For every reference, check that the target is in the chapter and on the topic the sentence implies:
+  - ❌ Chapter 4 introduction: `"we present an event-based VT&R system (Figure~\ref{fig:teaser})"`, but `fig:teaser` is the Chapter 3 block diagram; Chapter 4's own figure is `fig:ch4_teaser`
+  - ✔ Prefix labels per chapter (`fig:ch3_teaser`, `fig:ch4_teaser`) and flag remaining generic labels as MINOR
 
 ---
 
@@ -305,6 +315,11 @@ Use the claim, term, and chapter registers to compare content across the whole t
 - **Datasets, platforms, sensors, metrics** — same names, same capitalization, same definitions everywhere (`"EuRoC"` vs `"EUROC"`, ATE defined as RMSE in one chapter and mean in another).
 - **Spelling variant** — one variant throughout (British/Australian vs American): `optimisation`/`optimization`, `modelling`/`modeling`, `colour`/`color`, `behaviour`/`behavior`. This drifts frequently in theses by publication because venues impose American spelling. Follow the university's requirement if known; otherwise require consistency (MINOR, reported once with all locations).
 - **Person** — `"we"` vs `"I"` must be consistent across the thesis. Mixing is common when paper chapters (`"we"`) are combined with newly written framing chapters (`"I"`). Flag mixing; whether `"we"` or `"I"` is appropriate depends on university convention.
+- **One unit and one format per quantity (MINOR, reported once per quantity with all variants)** — the same physical quantity must use the same unit and the same numeric format throughout the thesis, including tables and figure axes:
+  - ❌ event rate given as `events per second`, `Mev/s`, `Hz`, and `MHz` in different chapters
+  - ❌ Recall@1 given as a fraction (`0.85`) in tables but as a percentage (`85%`) in the text, or absolute differences reported as `42%` in one chapter and `42 percentage points` in another
+  - ❌ `3000 m` and `3,000 m`, or `100 m`, `100-metre`, and `100 metres` for the same distance
+  - Also flag a unit or symbol used before it is defined (e.g., `Mev/s` in a caption before the text defines it).
 - **Tense of past chapters** — references to earlier chapters should use one convention (`"Chapter 3 showed"` or `"Chapter 3 shows"`).
 - **Evaluation protocol** — when chapters compare against the same baseline, the baseline configuration and reported numbers should be consistent or the difference explained.
 
@@ -332,6 +347,9 @@ Use the claim, term, and chapter registers to compare content across the whole t
 - If `acronym` or `glossaries` is used, flag hardcoded abbreviations that bypass it (`SLAM` typed directly instead of `\ac{slam}`/`\gls{slam}`), because hardcoded uses break the automatic first-use expansion.
 - Per-chapter re-expansion can be automated with `\acresetall` (acronym) or `\glsresetall` (glossaries) at the start of each chapter; suggest this where the convention is adopted.
 - Every abbreviation used in the thesis must appear in the list of abbreviations (if one exists), and every entry in the list must be used in the thesis. Expansions in the list must match the expansions in the text.
+- **Hard-coded expansion followed by `\gls` (MAJOR)** — if the long form is typed by hand (`"The Dynamic and Active Pixel Vision Sensor (DAVIS) family"`) and `\gls{davis}` is used afterwards, the first `\gls` still counts as first use and prints the expansion again (`"Dynamic and Active Pixel Vision Sensor (DAVIS)-346"`). Check the PDF for doubled expansions, and remember that every `\glsresetall`/`\acresetall` restarts first use.
+- **Title Case long forms in the glossary** — `glossaries`/`acronym` print the long form exactly as defined, so `\newacronym{vpr}{VPR}{Visual Place Recognition}` renders `"In Visual Place Recognition (VPR), ..."` mid-sentence. Flag Title Case long forms (except proper nouns) as MINOR; the list of abbreviations can still be capitalised via the glossary style.
+- **Forced inclusion of unused entries** — `\glsaddall` (or `\acuseall`-style tricks) puts every defined acronym in the list, including ones never used in the text. Flag unused entries as MINOR.
 - Capitalization of expansions must be consistent: either `"simultaneous localization and mapping (SLAM)"` or `"Simultaneous Localization and Mapping (SLAM)"` throughout (lowercase is standard unless proper noun).
 
 ---
@@ -385,7 +403,7 @@ Check for:
 - Passive voice overuse where active voice is clearer
 - Missing Oxford comma in enumerations (e.g., `"size, weight, and orientation"`); if the thesis consistently omits it per university style, accept that and flag only inconsistency
 - Comma splices and run-on sentences
-- Em dashes (see the Phase 1 em-dash note above)
+- Em dashes and dashes used as punctuation, in all forms (see the Phase 1 dash note above)
 
 ---
 
@@ -410,6 +428,14 @@ Chapters derived from papers often carry text that is wrong in a thesis:
 - Roman-numeral IEEE section references (`"Sec. III-B"`) → thesis numbering (`\cref{sec:xyz}`)
 - Anonymized references from double-blind submissions (`"Anonymous, 2023"`, `"[Anonymized for review]"`)
 - Paper-style contribution lists repeated in every chapter without adaptation to the thesis narrative (MAJOR rather than CRITICAL)
+
+**Placeholders and stray characters — flag as CRITICAL:**
+
+- Placeholder values or text left in the prose, captions, or tables: `X m/s`, `Y%`, `XX`, `N/A` where a value is expected, `??` (unresolved references), `[citation needed]`, `TBD`, `TODO`, `lorem ipsum`, `\hl{...}` or `\todo{...}` markup
+  - ❌ `"Teach traverses were driven at approximately X\,m/s indoors and Y\,m/s outdoors"`
+- Stray characters glued to commands, which print in the PDF: `t\subsection{...}`, `x\begin{figure}`, a leftover letter at the start or end of a line
+- Broken macro spacing that prints literally, such as `300,Hz` (a missing backslash in `300\,Hz`)
+- Check the compiled PDF text where available, since some of these are invisible in the source
 
 **Grammatical errors:**
 - Subject-verb agreement errors, especially after `"et al."`:
@@ -472,6 +498,9 @@ Check for:
   - `"demonstrate"` used for an unproven claim — distinguish between "we show" (in results) and "we demonstrate" (implies stronger proof)
   - `"real-time"`, `"robust"`, `"generalizes"`, `"deployable"` — robotics-specific claims that must be backed by runtime numbers on stated hardware, by experiments under the stated perturbations, by out-of-distribution evaluation, or by real-robot experiments respectively
 - **Claims in the thesis introduction and conclusion that are stronger than in the chapters** — the framing chapters are written last and often inflate what the technical chapters show (MAJOR)
+- **Chapter conclusions stronger than the chapter's own results (MAJOR)** — the same check applies within each chapter: compare every claim in a chapter's summary or conclusion with the results, tables, ablations, and figure captions of that chapter:
+  - ❌ Conclusion: `"the ablation shows that both more frequent and less frequent stepping degrade accuracy"`; ablation figure caption: `"the performance differences are rather small, indicating good robustness to this hyperparameter"`
+  - ❌ Conclusion: `"matching all baselines when brightness agreed"`; table: two of the four baselines are clearly lower
 - **Causal logic gaps** — motivation stated without demonstrating the connection
   - ❌ `"Because fast speed is critical, our method combines X and Y"` → why does this motivation imply this design?
 - **Unsupported limitation statements** — limitations introduced but not bounded, addressed, or cited
@@ -548,6 +577,7 @@ For in-depth figure design feedback, point the user to `03_figure_feedback.md`.
 #### Tables
 
 - **Unreferenced tables (CRITICAL)** — every `\begin{table}` must be cited at least once in the body text. Flag any orphan table as CRITICAL.
+  - **Exception: administrative tables.** Do not flag unreferenced administrative tables, such as statement-of-contribution tables, co-author signature tables, or declaration tables. If such a table is a numbered float, note it once as STYLE (it appears in the List of Tables and shifts the numbering of the result tables), and suggest a non-floating `tabular` without `\caption`.
 - Bold/underline convention for best/second-best values **defined in every table caption**
 - Asterisks or special markers explained either in caption or in a footnote
 - Consistent metric names across all tables and all chapters
@@ -576,6 +606,14 @@ Numbers stated in the text must exactly match the numbers in the corresponding t
   - ❌ Text says `"achieves the lowest ATE"` but the table shows another method with a lower value
 - Flag every mismatch as CRITICAL.
 
+**Derived claims and arithmetic (MAJOR, CRITICAL if in the abstract):**
+
+Recompute every claim that is derived from stated numbers rather than copied from a table:
+- **Orders of magnitude and "N times"** — `"two orders of magnitude above the frame rate of a conventional camera"` when the thesis itself states 300 Hz against a typical 30 Hz is one order of magnitude (10×). `"five times faster"` must equal the ratio of the stated values.
+- **Totals and sums** — `"six routes totalling more than 3,000 m"` when the six route lengths in the table sum to 1,089 m and 3,000 m is the total distance of all repeats. Check what is being summed: routes, trials, traverses, or hours.
+- **Averages, ranges, and percentages** — recompute means over the table cells the text refers to, check that a stated range (`"7.1–9.5 cm"`) covers exactly the cells it describes (the table may give 4.6–9.5 cm), and check that `"3 of 7 pairs"`-style counts match the table.
+- **Ratios in comparisons** — `"tripled"`, `"halved"`, `"doubled"` must hold for every case the sentence covers, not only the best one.
+
 ---
 
 ### CATEGORY M — LaTeX Formatting
@@ -595,6 +633,8 @@ Check for the following patterns:
 | `state-of-the-art` inconsistency | `state of the art method` | `state-of-the-art method` (adjective) / `state of the art` (noun) |
 | Non-breaking space before citation/ref | ` \cite{x}`, ` \ref{fig:x}` | `~\cite{x}`, `~\ref{fig:x}` |
 | Paper-template leftovers | `\IEEEPARstart`, `\IEEEmembership`, `\thanks{}`, `\markboth`, `\begin{IEEEkeywords}` | remove or replace with thesis equivalents |
+| `~` meaning "approximately" | `repeated ~8 km routes` (`~` is a non-breaking space, so the PDF reads "repeated 8 km routes") | `approximately 8\,km` or `${\sim}8$\,km` (CRITICAL when the meaning is lost) |
+| `\approx` / `\sim` as a prefix without braces | `$\approx 36\%$`, `$\sim 8$\,km` (a relation symbol, so TeX inserts relation spacing after it) | `${\approx}36\%$`, `${\sim}8$\,km` (braces make it an ordinary symbol, with no gap before the number) |
 | Manual layout hacks | `\vspace{-2mm}` around floats, `\\` to force line breaks in prose, `\newpage` to fix float placement | remove; a thesis has no page limit |
 
 **`\ie` and `\eg` macros:**
@@ -765,6 +805,13 @@ Hyphenation errors are extremely common and follow clear rules that can be syste
 - **Publication notices** — every chapter based on a published or submitted paper states this at the chapter start, with the full reference and publication status. Check that publication statuses (`"under review"`, `"accepted"`) are consistent between the chapter notice, the list of publications, and the bibliography.
 - **Acknowledgements** — funding sources and compute resources acknowledged (convention-dependent; flag only if the thesis mentions funding elsewhere but not here).
 
+**Commented-out or excluded content that is still needed (MAJOR; CRITICAL if required by the university):**
+
+- Search for sections, appendices, and chapters that are commented out (`%`, `\iffalse`, `\begin{comment}`) or excluded (`% \include{...}`, `\includeonly`) and check whether the rest of the thesis still depends on them:
+  - ❌ The Scope section of Chapter 1 is commented out, but Chapter 2 says `"lies outside the scope of this thesis as clarified in Chapter 1"`
+  - ❌ `\include{Appendix}` is commented out in the root file, so the co-author approvals and the included papers are missing from the PDF
+- Check that no label is referenced only from commented-out text and that no figure or table is included only there.
+
 **Appendices:**
 
 - Every appendix is referenced at least once from the main text (MINOR if orphaned).
@@ -777,6 +824,10 @@ Hyphenation errors are extremely common and follow clear rules that can be syste
 - **Duplicate entries** — the same work cited under two keys, often a preprint and the published version (MINOR; see also `01_latex_workspace_review.md`).
 - **Title capitalization** — acronyms and proper nouns in titles protected with braces (`{SLAM}`, `{LiDAR}`) so the bibliography style does not lowercase them.
 - **Self-citations as chapters** — the author's own papers that form thesis chapters should be cited where appropriate (publication notices), but arguments within the thesis should cross-reference the chapter, not the paper.
+- **Own publications vs chapter mapping (CRITICAL if contradictory)** — build a map of the author's publications to chapters from the List of Publications and the chapter publication notices, then check every place the author's own papers are cited, especially in the literature review:
+  - ❌ The literature review calls `[author2024paper]` "our own preliminary study" that Chapter 3 "generalises ... across sensors", while the List of Publications and the Chapter 3 notice state that Chapter 3 *is* `[author2024paper]` and Chapter 3 uses a single sensor
+  - ❌ A chapter described as "extending" a paper whose content it reproduces verbatim, or a published chapter cited as "concurrent work"
+  - The author's co-authored papers that are *not* thesis chapters (listed as "other publications") may be cited as prior work, but the thesis should make the relationship clear.
 
 ---
 
