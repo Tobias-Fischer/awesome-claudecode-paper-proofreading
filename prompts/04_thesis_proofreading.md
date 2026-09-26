@@ -467,6 +467,23 @@ Nominalization (turning verbs into nouns) makes sentences longer and weaker. Pre
 - `"It is worth noting that"` → delete or restructure
 - `"it can be seen that"` → delete; state the observation directly
 
+**"The same" (and "said") used as a pronoun (MINOR):**
+
+Using `"the same"` to refer back to something already mentioned reads as unnatural in academic English. It is common in Indian English and in legal or business writing. Name the referent, or use `"this"`, `"it"`, or `"doing so"`:
+
+  ```
+  ❌ "Event rates must be regulated, and the same can be achieved via adaptive bias control."
+  ✅ "Event rates must be regulated, which can be achieved via adaptive bias control."
+  ✅ "Event rates must be regulated; adaptive bias control achieves this."
+
+  ❌ "We collected a dataset and released the same publicly."
+  ✅ "We collected a dataset and released it publicly."
+
+  ❌ "The said method fails at night."   →  ✅ "This method fails at night."
+  ```
+
+Flag only pronoun uses: `"the same"` standing alone as a subject or object (`"the same can be"`, `"the same is shown in"`, `"apply the same to"`), and `"said"` or `"the aforementioned"` used as a determiner. Do **not** flag `"the same"` as an adjective before a noun (`"the same place"`, `"at the same instant"`), or in comparisons (`"remains the same as"`).
+
 **Verb choice for contributions:**
 - `"suggest a method"` → prefer `"propose"` for a novel algorithm, `"investigate"` / `"study"` / `"explore"` for an analysis, `"present"` for a system or dataset
 
