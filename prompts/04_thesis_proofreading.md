@@ -263,6 +263,21 @@ In a paper, the reader holds the motivation in mind for eight pages. In a 200-pa
   - Flag omissions, ordering mismatches, and stale descriptions as MAJOR. The same check applies to the thesis outline in the Introduction (see Category N).
 - **Backward references with purpose** — when earlier material is reused, say why it matters now, not only where it is ("Recall from \cref{sec:x} that the map is static; this assumption breaks down when...").
 
+#### Unclear References (Implicit Instead of Explicit)
+
+A thesis is read in pieces, often weeks apart. Every reference back to earlier text must be resolvable at a glance. Flag places where the writer could have named something but left the reader to reconstruct it:
+
+- **Pronouns without a clear antecedent** — `"it"`, `"they"`, `"them"`, `"this"`, `"these"`, `"those"`, `"such"`, `"which"` when the intended antecedent is not the nearest suitable noun, when several candidate nouns compete, or when the antecedent is in an earlier sentence:
+  - ❌ `"The limitations of Sec. 6.3.1 and 6.3.2 share a cause, a sensor whose biases and whose regulated rate are global while its noise and its signal are not, and two responses follow from them."` (`"them"`: the limitations? the biases? noise and signal?)
+  - ✔ `"The two limitations share a cause: ... Two responses follow from these limitations."`
+- **Bare `"this"`/`"which"` pointing at a whole clause** — `"..., which is a form of filtering the bias controller cannot perform"` or a sentence starting `"This shows ..."` where `"this"` could be the method, the result, or the whole previous paragraph. Add the noun: `"This result shows ..."`, `"a form of filtering that the bias controller cannot perform"`.
+- **Counting and selecting references to earlier items** — `"either"`, `"both"`, `"neither"`, `"the two"`, `"the first"`/`"the second"`, `"the former"`/`"the latter"`. Flag them when the items were not listed in the same or the immediately preceding sentence, or when the count does not match (`"the former ... the latter"` after three items):
+  - ❌ `"The first is spatial: ... The second is temporal: ..., which is a form of filtering the bias controller cannot perform. Either would let the night-time frame be formed from ..."` (`"Either"` refers to two responses introduced two sentences and one long digression earlier)
+  - ✔ `"Either form of filtering, spatial or temporal, would let ..."`
+- **Implicit links** — appositives or juxtapositions that leave the reader to infer the relationship (`"share a cause, a sensor whose ..."`). State the relationship explicitly (`"Both limitations have the same cause: ..."`).
+
+Severity: MINOR by default; MAJOR when a plausible misreading of the referent changes the technical meaning. Fix direction: name or repeat the referent (`"these two limitations"`, `"either form of filtering"`) rather than restructuring the sentence. Report recurring patterns grouped per chapter.
+
 #### Logical Ordering
 
 - **Forward references that assume later content** — flag places where the text relies on something only explained later without a forward pointer.
