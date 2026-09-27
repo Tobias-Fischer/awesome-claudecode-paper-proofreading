@@ -190,6 +190,16 @@ A thesis should open broad, go deep, and close broad again:
 - Flag chapters that deviate from the common skeleton without a visible reason (MAJOR if an entire element such as limitations or a summary is missing; MINOR for ordering differences).
 - Flag unbalanced chapter lengths when a technical chapter is less than roughly half or more than roughly twice the median technical chapter length, and suggest whether content should be split, merged, or moved to an appendix (STYLE unless extreme).
 
+**Anticipated examiner objections ("multistep anticipation", MAJOR when a central objection is unanswered):**
+
+Read each technical chapter as a sceptical examiner would, and predict the questions it raises in order: the first objection, then the follow-up once the first is answered. For each chain, check whether the text answers it before the examiner has to ask:
+
+- ❌ `"The system issues corrections at 300 Hz."` → *Examiner: "Why does the rate matter, if the tracking error equals that of the 30 Hz baselines?"* → *"Would the same FFT pipeline applied to conventional frames not be just as fast?"* The chapter answers neither.
+- ✔ The chapter shows where the higher rate pays off (higher speed, lower compute or energy, lower latency under fast motion), and includes an ablation that applies the same matching pipeline to conventional frames.
+- Typical first objections: *Is the problem already solved?* *Why not use the obvious alternative (a different sensor, an off-the-shelf feature, a simpler baseline)?* *Does the gain come from the claimed ingredient or from another part of the pipeline?* *Does it generalise beyond the tested platform, dataset, or conditions?*
+
+Report the objections in Output Section 2g and flag each unanswered central objection as a numbered issue.
+
 **Thesis by publication [by publication]:**
 
 - Every paper-based chapter needs linking text (a preface or opening section) explaining how the paper fits into the thesis narrative and relates to the neighbouring chapters. Flag its absence as CRITICAL; without it, the thesis reads as a stapled collection of papers.
@@ -257,6 +267,8 @@ Apply these checks to each chapter individually.
 - **One idea per paragraph** — flag paragraphs that mix two or more unrelated ideas and suggest where to split them.
 - **Paragraph length** — flag one-sentence paragraphs (except deliberate emphasis) and paragraphs longer than roughly two-thirds of a page (STYLE, MINOR if repeated).
 - **Old-to-new information flow** — sentences should start with known information and end with new information. Flag sequences where each sentence introduces an unrelated new subject, forcing the reader to re-orient (STYLE).
+- **Digressions (the "iceberg" principle, STYLE; MINOR if a section drifts)** — a document distils far more work than it shows. Flag paragraphs, asides, and background passages that do not serve the argument of their chapter (e.g., history or analogies that are never used again, alternatives described "though outside the scope"). In a thesis, more detail belongs in the text than in a paper, but it must still serve the story; move detail that only documents effort to an appendix.
+- **Skimmability (MINOR)** — examiners and reviewers are often tired or reading in fragments. A reader who reads only the abstract, the first paragraph of the introduction, the first paragraph and the summary of each chapter, and the overview figures must still get the problem, the contributions, and the key results. Flag places where the key point of a chapter is only found deep in its body.
 - **Missing transitions** at section and subsection boundaries.
 
 #### Motivation Reminders and Signposting
@@ -598,6 +610,10 @@ Check for:
   - ❌ Conclusion: `"matching all baselines when brightness agreed"`; table: two of the four baselines are clearly lower
 - **Causal logic gaps** — motivation stated without demonstrating the connection
   - ❌ `"Because fast speed is critical, our method combines X and Y"` → why does this motivation imply this design?
+- **Contribution type and evaluation fit (MAJOR if mismatched)** — identify what kind of contribution each chapter claims and check that the evaluation matches it:
+  - **"Better than before"** (improving an established task, e.g., SLAM or VPR): requires comparison against the strongest *current* methods on established benchmarks, under the same protocol.
+  - **New problem or capability** (no established benchmark): requires a justified evaluation protocol, meaningful baselines (including the simplest one that could work), and an explanation of why standard benchmarks do not apply.
+  - **Contribution pillars**: theory or idea, experimental evidence, and effort (dataset, system, benchmark). Most contributions are strong in one or two; the contribution statement should say which, and should not claim all three by default.
 - **Unsupported limitation statements** — limitations introduced but not bounded, addressed, or cited
 - **Variables or symbols used before being defined** — flag every occurrence
 - **Claims inside figure captions** — captions describe; they do not conclude
@@ -1044,6 +1060,11 @@ Deviating headings: N  (see issue [N])
 Lone child headings: N (see issue [N])
 Stacked headings: N    (see issue [N])
 ```
+
+**2g. Anticipated examiner questions**
+
+| Chapter | Anticipated objection (and follow-up) | Answered in text? | Issue # |
+|---------|----------------------------------------|-------------------|---------|
 
 ### 3. Full Issue List — File by File
 

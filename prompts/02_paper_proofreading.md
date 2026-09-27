@@ -175,6 +175,10 @@ Check for:
   - `"demonstrate"` used for an unproven claim — distinguish between "we show" (in results) and "we demonstrate" (implies stronger proof)
 - **Causal logic gaps** — motivation stated without demonstrating the connection
   - ❌ `"Because fast speed is critical, our method combines X and Y"` → why does this motivation imply this design?
+- **Contribution type and evaluation fit (MAJOR if mismatched)** — identify what kind of contribution the paper claims and check that the evaluation matches it:
+  - **"Better than before"** (improving an established task, e.g., SLAM or VPR): requires comparison against the strongest *current* methods on established benchmarks, under the same protocol.
+  - **New problem or capability** (no established benchmark): requires a justified evaluation protocol, meaningful baselines (including the simplest one that could work), and an explanation of why standard benchmarks do not apply.
+  - **Contribution pillars**: theory or idea, experimental evidence, and effort (dataset, system, benchmark). Most contributions are strong in one or two; the contribution statement should say which, and should not claim all three by default.
 - **Unsupported limitation statements** — limitations introduced but not bounded, addressed, or cited
 - **Variables or symbols used before being defined** — flag every occurrence
 - **Acronyms used before first expansion** — flag first occurrence in abstract and body separately
@@ -228,6 +232,20 @@ Check for:
 - **Claim coverage** — verify that every claim made in the introduction is covered by at least one experiment. Flag any claim with no supporting result.
 
 #### General
+
+**Anticipated reviewer objections ("multistep anticipation", MAJOR when a central objection is unanswered):**
+
+Read the paper as a sceptical reviewer would, and predict the questions it raises in order: the first objection, then the follow-up once the first is answered. For each chain, check whether the text answers it before the reviewer has to ask:
+
+- ❌ `"The system issues corrections at 300 Hz."` → *Reviewer: "Why does the rate matter, if the tracking error equals that of the 30 Hz baselines?"* → *"Would the same FFT pipeline applied to conventional frames not be just as fast?"* The paper answers neither.
+- ✔ The paper shows where the higher rate pays off (higher speed, lower compute or energy, lower latency under fast motion), and includes an ablation that applies the same matching pipeline to conventional frames.
+- Typical first objections: *Is the problem already solved?* *Why not use the obvious alternative (a different sensor, an off-the-shelf feature, a simpler baseline)?* *Does the gain come from the claimed ingredient or from another part of the pipeline?* *Does it generalise beyond the tested platform, dataset, or conditions?*
+
+Flag each unanswered central objection as a numbered issue; these are the questions that otherwise appear in the reviews and the rebuttal.
+
+- **Digressions (the "iceberg" principle, STYLE; MINOR if a section drifts)** — a document distils far more work than it shows. Flag paragraphs, asides, and background passages that do not serve the argument of their section (e.g., history or analogies that are never used again, alternatives described "though outside the scope"). Move detail that only documents effort to supplementary material.
+- **Skimmability (MINOR)** — reviewers are often tired or reading in fragments. A reader who reads only the abstract, the first paragraph of the introduction, the contribution list, the section openings, and Figure 1 must still get the problem, the contributions, and the key results. Flag places where the key point of a section is only found deep in its body.
+
 
 - **Repetition across sections**
   - Experimental setup described in both the method section and results section
