@@ -278,6 +278,18 @@ A thesis is read in pieces, often weeks apart. Every reference back to earlier t
 
 Severity: MINOR by default; MAJOR when a plausible misreading of the referent changes the technical meaning. Fix direction: name or repeat the referent (`"these two limitations"`, `"either form of filtering"`) rather than restructuring the sentence. Report recurring patterns grouped per chapter.
 
+#### Announced but Unexplained ("Teaser" Sentences)
+
+Flag sentences that announce something with a vague noun phrase (`"a natural mechanism"`, `"a limitation"`, `"a different purpose"`, `"two obstacles"`, `"several factors"`) but leave open what it is, so that the reader must guess until a later sentence explains it with no visible connection:
+
+- ❌ `"The filter offers a natural mechanism for deciding when an anchor is worth its cost that the fixed schedule leaves unused. The confidence proxies used in the soft-fusion experiments could be employed to detect the need for a more accurate RGB observation."` (what is the mechanism? It only becomes clear in the next sentence, which does not say that it is the explanation)
+- ✔ `"The filter offers a natural mechanism, unused by the fixed schedule, for deciding when an anchor is worth its cost: the confidence proxies of the soft-fusion experiments could detect when a more accurate RGB observation is needed."`
+- ✔ Name it in the same sentence: `"The confidence proxies of Sec. 5.5 give the filter a natural way to decide when an anchor is worth its cost."`
+
+Accepted connections: a colon, naming the thing in the same sentence, or an explicit enumeration (`"Two obstacles ... First, ... Second, ..."`). Do **not** flag roadmap sentences whose next sentence starts with the announced content in an obvious way (`"This has three consequences. First, ..."`).
+
+Also flag the stronger form, where the announced content is **never** explained (`"the optimal settings depend on several factors"`, and the factors are never named). Severity: MINOR; MAJOR in the abstract, or when the announced content is never given.
+
 #### Logical Ordering
 
 - **Forward references that assume later content** — flag places where the text relies on something only explained later without a forward pointer.
