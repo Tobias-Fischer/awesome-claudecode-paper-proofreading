@@ -257,6 +257,11 @@ In a paper, the reader holds the motivation in mind for eight pages. In a 200-pa
 - **At the start of long sections** — especially long method or derivation sections, a sentence should state what the section achieves and why it is needed for the chapter's goal. Flag sections longer than roughly three pages without such a statement (MINOR).
 - **After long technical passages** — when returning from a long derivation or implementation detail to the main argument, the text should re-establish the purpose ("With this estimator in place, we can now address the original problem of...").
 - **Signposting** — the thesis should tell the reader where they are and where they are going ("This chapter first..., then..., and finally..."). Flag long chapters without any roadmap sentence (MINOR). Conversely, flag excessive signposting that repeats the section list verbatim at every level (STYLE).
+- **Statements that the context already makes (MINOR)** — do not tell the reader what the section heading has already told them, and do not end a paragraph with a disclaimer about its own status:
+  - ❌ `"This thesis did not investigate this and leaves it as a direction for future work."` or `"... is left as future work."` inside a Future Work section
+  - ❌ `"Several limitations should be stated."` opening a limitations paragraph; `"This is a limitation of our approach."` inside a Limitations section
+  - ❌ `"Worth noting, though somewhat outside the scope of this review, is ..."` (if it is outside the scope, either justify its inclusion or cut it)
+  - ✔ Lead with the content instead: in Future Work, open each item with a sentence that clearly states the proposed direction (`"A natural extension is to train a spiking network at the event rate that the controller of Chapter 3 maintains."`), then give the reason and how it could be evaluated
 - **Complete section overviews** — whenever the text gives an overview of what follows ("The remainder of this chapter is organized as follows...", "\cref{sec:a} introduces..., \cref{sec:b} presents..."), it must cover **every** section at that level, in the actual order, with descriptions that match the section content. Compare each overview against the heading register:
   - ❌ The overview describes Sections 4.2, 4.3, and 4.5, but skips Section 4.4 (usually a section added later)
   - ❌ The overview lists sections in a different order than they appear, or describes a section that was since removed or merged
@@ -560,6 +565,11 @@ Check for:
   - Severity: MAJOR when the claim underpins the motivation or a research gap; MINOR otherwise. Report recurring patterns grouped per chapter.
   - Do not push toward over-hedging: flag stacked qualifiers (`"may possibly potentially"`) and hedged statements about the thesis's own measured results (STYLE).
 - **Scope-limiting language** without justification (`"beyond our scope"`, `"left for future work"` with no explanation). In a thesis, examiners expect a justification of the scope boundaries.
+- **Relational terms without a reference (MINOR)** — words that only have meaning relative to something must say what that something is: `"matched"` (to what?), `"optimal"` (for which objective?), `"appropriate"`, `"suitable"`, `"acceptable"`, `"reasonable"`, `"sufficient"`, `"comparable"`, `"consistent"` (across what? by which measure?), `"desired"`, `"better"`. Flag them when the reference cannot be recovered from the same or the previous sentence:
+  - ❌ `"... would allow such a network to be trained and deployed at a matched operating point"` (matched between what? the event rate seen in training and in deployment?)
+  - ✔ `"... trained and deployed at the same input event rate, so that ..."`
+  - ❌ `"accurate wheel odometry assumes acceptable degrees of skidding"` (acceptable for what accuracy?)
+  - ❌ `"The most consistent performance is obtained when N = 5"` (lowest variance across runs, or least spread across query conditions?)
 - **Uncertainty and variability** — robotics results averaged over few runs without variance, standard deviation, or number of trials reported (MAJOR in the main evaluation)
 
 ---
@@ -739,7 +749,7 @@ Additional checks:
 - **Synthesis, not only summary** — explains how the contributions fit together and what they mean collectively (see Category A, T-structure)
 - Does not merely restate the abstract or copy chapter conclusions verbatim
 - **Limitations** acknowledged at thesis level, not only per chapter
-- **Future work** is specific and grounded, not vague. If present, it should start with a grounding sentence such as `"Despite these encouraging results, there is further space for improvement."` followed by concrete directions
+- **Future work** is specific and grounded, not vague. Each direction should open with the proposal itself, not end with a disclaimer that it was not investigated (see Category C, statements that the context already makes). If present, it should start with a grounding sentence such as `"Despite these encouraging results, there is further space for improvement."` followed by concrete directions
 - No new experimental results or claims introduced for the first time
 - **Broader impact** — where relevant for robotics (deployment, safety, societal or ethical considerations), briefly addressed
 
