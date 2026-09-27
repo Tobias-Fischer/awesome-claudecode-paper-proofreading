@@ -221,6 +221,8 @@ Apply these checks to each chapter individually.
 #### Methodology / Equations
 
 - **Generic section title (MINOR)** — flag if a method section is titled with a generic name such as `"Method"`, `"Methodology"`, `"Proposed Method"`, `"Our Method"`, `"Approach"`, or `"Our Approach"`. A descriptive title that hints at the technical approach (e.g., `"Hierarchical Scene Graph Construction"`) helps the examiner navigate the Table of Contents. In a thesis with several such sections, generic titles make the Table of Contents unreadable; suggest descriptive alternatives based on the section's actual content.
+- **Foundational vs own work (MAJOR if unclear)** — examiners must be able to see exactly what the candidate contributed. Components adopted from prior work (including the candidate's own earlier chapters) must be marked as such (`"Following X et al.~\cite{...}, we ..."`), and the new parts must be identifiable. Flag method sections where adopted and new components are indistinguishable.
+- **Method vs experimental setup (MINOR)** — the method describes the approach; how it was tested (datasets, platforms, metrics, parameter values and how they were chosen) belongs in the experimental setup. Flag setup details scattered through the method and vice versa.
 - **Equation re-explanation** — if an equation is defined in one section or chapter and then referenced again later, the surrounding text must cross-reference it rather than re-explain it from scratch:
   - ❌ Chapter 5 re-typesetting Eq. (3.4) and re-defining all variables as if it is the first occurrence
   - ✔ `"Removing $\mathcal{L}_{\text{reg}}$ from \eqref{eq:total_loss} (\cref{sec:loss}) leads to..."`
@@ -436,6 +438,8 @@ Use the claim, term, and chapter registers to compare content across the whole t
 - **Gap identification** — the literature review must identify the gaps that the technical chapters address, and those gaps must match the research questions. Flag a literature review that summarizes prior work without leading to the thesis's research questions (MAJOR).
 - **Key difference** — for every major line of prior work, the thesis must state somewhere how its contributions differ. Flag areas with zero comparison to the thesis's own work (MAJOR).
 - **Currency** — theses are often written over three to four years. Check the publication years in the bibliography: flag a literature review with few or no works from the last two years before submission (MAJOR in fast-moving areas such as learning-based robotics), and flag temporal claims that may have become stale: `"recently"`, `"to date"`, `"currently"`, `"state-of-the-art"`, `"no prior work"`, `"the first"` (MINOR; state that you cannot verify currency beyond your knowledge).
+- **Pioneering work** — alongside recent work, the literature review must cite the pioneering works of each area; flag areas reviewed only through the last few years (MINOR).
+- **Tone** — discuss prior work objectively and criticise only the shortcomings that the thesis addresses; flag dismissive wording (`"naive"`, `"fails to"`, `"simply"`) applied to other authors' work (MINOR).
 - **Synthesis versus listing** — flag long runs of `"X et al. do A. Y et al. do B. Z et al. do C."` without grouping, comparison, or critical assessment (MAJOR if the whole review reads this way).
 - **Citation fit (MINOR; MAJOR if a key claim rests on it)** — each citation must support the specific claim it is attached to:
   - ❌ a survey cited for a specific number or result it only reports second-hand (cite the original)
@@ -823,6 +827,10 @@ Additional checks:
 - **Paragraphs** — multiple paragraphs are acceptable in a thesis abstract unless the university forbids them; flag `\\` used to force line breaks as CRITICAL
 - Does not introduce results that are not supported in the chapters, and every number matches the chapters exactly
 - **Keywords** — if the university requires a keyword list, check that it exists
+
+**Titles (thesis and chapters):**
+
+- Thesis and chapter titles should be concise and specific, without vague or redundant words (`"Towards"`, `"A Novel Approach for"`), and should match the content (e.g., a chapter title must not promise a scope the chapter does not cover). Coined system acronyms should be short, pronounceable, and not collide with existing method names (MINOR).
 
 **Introduction chapter:**
 

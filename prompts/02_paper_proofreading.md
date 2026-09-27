@@ -192,10 +192,19 @@ Check for:
 
 ### CATEGORY D — Structure & Flow
 
+#### Title and Front Page
+
+- **Title (MINOR)** — concise and specific; remove vague or redundant words (`"Towards"`, `"A Novel Approach for"`, `"An Efficient Method for"`, `"Using"` chains). A coined system acronym should be short and pronounceable, not contrived or whimsical, and must not collide with an existing well-known method name.
+- **Front page** — for a 6–8 page paper, the title, abstract, and most of the introduction are on page 1; together with the front-page figure (see `03_figure_feedback.md`, Figure 1), they decide whether a reviewer reads on.
+
 #### Introduction
 
 - **Main contribution paragraph** — verify there is a dedicated paragraph that explicitly starts with or centers on the main contribution. The reader must not have to infer it.
 - **Name the contributions** — use the word "contribution" explicitly (`"Our main contributions are: ..."`) so that reviewers can find and quote them.
+- **Length** — for a 6–8 page double-column paper, the introduction should fit roughly within the first page. Flag introductions that run well into page 2 (MINOR).
+- **Framing and significance** — the introduction should frame the work either by the problem domain (e.g., localisation of autonomous vehicles) or by the technique being improved, and must state why the improvement matters, not only what it is (MAJOR if the significance is never stated).
+- **Difference from prior work** — each contribution should say how it differs from the closest prior work, not only what it is.
+- **Closing roadmap** — the introduction may end with a short roadmap of the remaining sections; if present, it must list every section in order, with descriptions that match the section content.
 
 #### Related Work
 
@@ -204,10 +213,16 @@ Check for:
 - **Quantitative scope claims** inconsistent with the citation list:
   - ❌ `"There are only a few works using diffusion models [1, 2, 3, 4, 5]"` → not a few
 - **Key difference** — at least one mention of how the proposed approach differs from prior work must appear somewhere in the Related Work section, either at the end of each thematic paragraph or in a brief closing paragraph. Flag as MAJOR if the entire section describes prior methods with zero comparison to this work.
+- **Tone** — discuss prior work objectively; criticise only the shortcomings that the paper actually addresses. Flag dismissive wording (`"naive"`, `"fails to"`, `"simply"`) applied to other authors' work (MINOR).
+- **Closing recap** — the section should end with a short recap that summarises the landscape and sets up the gap the paper fills (MINOR if missing).
+- **Old and new** — cite pioneering work as well as recent work; flag a Related Work section that cites only the last few years for a long-standing problem (MINOR).
 
 #### Methodology / Equations
 
 - **Generic section title (MINOR)** — flag if the main methodology section is titled with a generic name such as `"Method"`, `"Methodology"`, `"Proposed Method"`, `"Our Method"`, `"Approach"`, or `"Our Approach"`. A descriptive title that hints at the technical approach (e.g., `"Hierarchical Scene Graph Construction"` or `"Sparse-to-Dense Matching Pipeline"`) helps reviewers scanning the paper structure and signals what is novel. Suggest a more descriptive alternative based on the section's actual content.
+- **Section overview** — the method section should open with an overview of its components and how they fit together before the first subsection (see "glue" under General).
+- **Foundational vs novel (MAJOR if unclear)** — standard components described to keep the paper self-contained must be clearly marked as prior work (`"Following X~\cite{...}, we ..."`), so that reviewers can see exactly which parts are the paper's contribution. Flag method sections where adopted and new components are indistinguishable.
+- **Method vs experimental setup** — the method section describes the approach; *how it was tested* (datasets, platforms, metrics, parameter values and how they were chosen, baselines) belongs in the experimental setup. Flag setup details mixed into the method and vice versa (MINOR).
 - **Equation re-explanation** — if an equation is defined in the method section and then referenced again in the ablation or experiments section, the surrounding text must use a cross-reference rather than re-explain the terms:
   - ❌ Ablation re-typesetting Eq. (3) and re-defining all variables as if it is the first occurrence
   - ✔ `"Removing $\mathcal{L}_{\text{reg}}$ from \eqref{eq:total_loss} leads to..."`
@@ -225,6 +240,8 @@ Check for:
 
 #### Experimental Evaluation
 
+- **Experimental setup section** — datasets, robot platforms, metrics, baselines, and parameter values with how they were chosen must be described in a dedicated setup section or subsection before the results. A footnote with a link to code or data helps replication; check that it respects the venue's anonymity rules (CRITICAL if it de-anonymises a double-blind submission).
+- **Results overview** — the results section should open with a sentence or two on what the subsections show (quantitative results, analysis, ablations, robot demonstrations).
 - **Experiment purpose statement** — every experiment or subsection in the evaluation must open with a clear statement of (a) WHY the experiment is there, (b) WHAT claim it supports, and (c) HOW it demonstrates the claim:
   - ❌ Jumping directly into numbers without stating what the experiment is intended to show
   - ✔ `"The following experiment is designed to support our first claim that \methodname achieves lower ATE than baseline methods under dynamic conditions."`
@@ -232,6 +249,9 @@ Check for:
 - **Claim coverage** — verify that every claim made in the introduction is covered by at least one experiment. Flag any claim with no supporting result.
 
 #### General
+
+- **"Glue" before subheadings (MINOR)** — every major section should start with a short introductory paragraph that contextualises what follows; flag a section heading followed directly by a subsection heading.
+- **Sentence purpose (STYLE)** — near submission, every sentence should have one clear purpose. Flag sentences that only repeat the previous one, announce what the next sentence says, or add nothing; also flag places where a necessary sentence is missing (e.g., a result without the sentence that interprets it).
 
 **Anticipated reviewer objections ("multistep anticipation", MAJOR when a central objection is unanswered):**
 
