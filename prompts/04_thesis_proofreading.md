@@ -228,6 +228,16 @@ Apply these checks to each chapter individually.
 - **Claim coverage** — verify that every claim made in the chapter introduction is covered by at least one experiment. Flag any claim with no supporting result.
 - **Real-world validation** — in robotics, examiners ask whether results transfer to real hardware. If a chapter's claims concern robot deployment but all experiments are in simulation or on offline datasets, flag the gap unless it is explicitly acknowledged as a limitation (MAJOR).
 - **Experimental setup completeness** — robot platform, sensors, compute hardware, datasets, baselines, metrics, and hyperparameters must be described (or cross-referenced) for every chapter. Flag missing setup details that prevent reproducibility.
+- **Tuning on the evaluation data (MAJOR)** — flag parameters, thresholds, or gains that were tuned on the same routes, sequences, or traverses that are later used to report results, unless a held-out split is used or the overlap is stated as a limitation:
+  - ❌ `"The gains were tuned by hand on the indoor routes"`, and the same indoor routes appear in the main results table
+  - ✔ tune on separate routes (or a validation split), or state the overlap and report results on the untouched routes separately
+- **Unjustified parameter values ("magic numbers", MINOR; MAJOR for parameters that drive the main result)** — every hyperparameter, threshold, window length, tolerance, and sampling interval needs a reason (derived, taken from prior work with a citation, or chosen by a reported sweep) and, for the influential ones, a sensitivity analysis. List the unjustified values once per chapter (e.g., `N = 5`, `σ = 2 frames`, `δ = 2.6`, `β = 10`, `every 100th frame`, `70 m tolerance`).
+- **Baseline fairness (MAJOR)** — check that baselines received the same inputs, tuning effort, initialisation, and evaluation protocol as the proposed method, and that the thesis says so:
+  - ❌ the proposed filter starts from a uniform prior while an odometry-only baseline is seeded at the true starting position, without comment
+  - ❌ the proposed method's gains were tuned, but it is not stated whether the baselines were re-tuned for the new platform
+  - Also flag re-implemented baselines that are not declared as re-implementations, and baselines run with default parameters from another domain.
+- **Failure analysis (MAJOR in the main evaluation)** — examiners ask "when does it fail?". Each technical chapter should show and discuss failure cases or near-failures (qualitative examples, worst-case runs, conditions outside the tested envelope). A 100% success rate without any analysis of margins or failure modes should be flagged.
+- **Results that only restate the table (MINOR)** — flag results paragraphs that repeat the numbers of a table or figure without interpretation. Each paragraph should say what the numbers mean and why they came out that way (mechanism, not only magnitude).
 
 #### Repetition
 
@@ -346,6 +356,7 @@ Use the claim, term, and chapter registers to compare content across the whole t
 - **Method and system names** — the author's own methods must be named identically everywhere, preferably via macros (e.g., `\methodname`). Flag drift such as `"PR-Net"`, `"PRNet"`, and `"our place recognition network"` for the same system.
 - **Datasets, platforms, sensors, metrics** — same names, same capitalization, same definitions everywhere (`"EuRoC"` vs `"EUROC"`, ATE defined as RMSE in one chapter and mean in another).
 - **Spelling variant** — one variant throughout (British/Australian vs American): `optimisation`/`optimization`, `modelling`/`modeling`, `colour`/`color`, `behaviour`/`behavior`. This drifts frequently in theses by publication because venues impose American spelling. Follow the university's requirement if known; otherwise require consistency (MINOR, reported once with all locations).
+- **Terms of art defined once and used consistently (MINOR)** — central technical terms (e.g., `"topometric"`, `"along-path"`, `"anchor"`, `"operating point"`, `"traverse"` vs `"trajectory"` vs `"route"`) must be defined once, ideally in the background chapter, and used in the same sense in every chapter. Flag terms used before definition, never defined, or used with shifting meanings.
 - **Person** — `"we"` vs `"I"` must be consistent across the thesis. Mixing is common when paper chapters (`"we"`) are combined with newly written framing chapters (`"I"`). Flag mixing; whether `"we"` or `"I"` is appropriate depends on university convention.
 - **One unit and one format per quantity (MINOR, reported once per quantity with all variants)** — the same physical quantity must use the same unit and the same numeric format throughout the thesis, including tables and figure axes:
   - ❌ event rate given as `events per second`, `Mev/s`, `Hz`, and `MHz` in different chapters
@@ -414,6 +425,11 @@ Use the claim, term, and chapter registers to compare content across the whole t
 - **Key difference** — for every major line of prior work, the thesis must state somewhere how its contributions differ. Flag areas with zero comparison to the thesis's own work (MAJOR).
 - **Currency** — theses are often written over three to four years. Check the publication years in the bibliography: flag a literature review with few or no works from the last two years before submission (MAJOR in fast-moving areas such as learning-based robotics), and flag temporal claims that may have become stale: `"recently"`, `"to date"`, `"currently"`, `"state-of-the-art"`, `"no prior work"`, `"the first"` (MINOR; state that you cannot verify currency beyond your knowledge).
 - **Synthesis versus listing** — flag long runs of `"X et al. do A. Y et al. do B. Z et al. do C."` without grouping, comparison, or critical assessment (MAJOR if the whole review reads this way).
+- **Citation fit (MINOR; MAJOR if a key claim rests on it)** — each citation must support the specific claim it is attached to:
+  - ❌ a survey cited for a specific number or result it only reports second-hand (cite the original)
+  - ❌ a paper cited for something it does not do (e.g., Lucas–Kanade cited for descriptor matching)
+  - ❌ long citation lists (`[3–12]`) where none of the works is discussed; group them by what they do or cut the list
+  - Flag for manual verification rather than asserting when the cited paper's content cannot be checked.
 - **Quantitative scope claims** inconsistent with the citation list:
   - ❌ `"There are only a few works using diffusion models [1, 2, 3, 4, 5, 6, 7]"` → not a few
 - **Duplication between literature review and chapter related work** — chapter-level related work should focus on work specific to that chapter and cross-reference the literature review rather than repeat it (MINOR).
@@ -435,6 +451,8 @@ Check for:
 - Passive voice overuse where active voice is clearer
 - Missing Oxford comma in enumerations (e.g., `"size, weight, and orientation"`); if the thesis consistently omits it per university style, accept that and flag only inconsistency
 - Comma splices and run-on sentences
+- **Overlong sentences (MINOR, grouped per chapter)** — flag sentences over roughly 50 words, and sentences that chain several independent ideas with semicolons and parenthetical asides. One idea per sentence; split at the semicolons.
+- **List punctuation** — a colon introduces a list; items that contain commas are separated by semicolons (`"three settings: low, as in X; default; and high, as in Y"`). In `itemize`/`enumerate` lists, use one convention throughout: either full sentences, each ending with a full stop, or fragments separated by semicolons with the last item ending in a full stop. Flag mixed conventions within a list and across chapters.
 - Em dashes and dashes used as punctuation, in all forms (see the Phase 1 dash note above)
 
 ---
@@ -533,6 +551,17 @@ Flag metaphors, idioms, personification, and marketing verbs where literal, meas
 
 Typical triggers: sensors or methods that `"earn"`, `"survive"`, `"defeat"`, `"fare"`, or `"lift"` something; `"drowned in"`, `"starving"`, `"riddle"`, `"a privilege of"`, `"the record is shorter still"`, `"it has been done in the air"`; marketing verbs such as `"showcase"` (use `"show"`, `"demonstrate"`, `"report"`); and intensifiers such as `"enormous"`, `"huge"`, `"tiny"` (give the number). Established technical metaphors are fine (`"loop closure"`, `"drift"`, `"bottleneck"`, `"close the loop"`, `"noise floor"`). A single vivid phrase in the introduction can be a deliberate choice; flag clusters, and flag every instance in the abstract, results, and conclusions.
 
+**Tell-tale AI vocabulary and formulaic constructions (MINOR, grouped per chapter):**
+
+Like em dashes, some words and constructions are strong signals of AI-generated text and make examiners suspicious even when the text was written by the candidate. Flag clusters of:
+- Vocabulary: `"Crucially,"`, `"Notably,"`, `"Importantly,"` as sentence openers; `"leverage"`, `"harness"`, `"delve"`, `"pivotal"`, `"seamless(ly)"`, `"landscape"`, `"realm"`, `"intricate"`, `"underscore(s)"`, `"showcase"`, `"a testament to"`, `"paving the way"`
+- Formulaic contrasts repeated many times per chapter: `"not X, but Y"`, `"X rather than Y"`, `"it is not X; it is Y"`, and rhetorical triads (`"fast, robust, and efficient"`) used as filler
+- Replace with plain verbs (`"use"` for leverage/harness, `"show"` for showcase/underscore) or delete the opener; keep a contrast only where both sides are informative.
+
+**Eponyms are capitalised (MINOR):**
+
+Terms named after people keep their capital letter: `Gaussian`, `Euclidean`, `Jacobian`, `Hessian`, `Laplacian`, `Mahalanobis`, `Voronoi`, `Kalman`, `Bayesian`, `Markov`, `Fourier`, `Cartesian`, `Lie group`, `Levenberg–Marquardt`. Conversely, do not capitalise ordinary words by analogy (`"cosine distance"`, not `"Cosine distance"`).
+
 **Verb choice for contributions:**
 - `"suggest a method"` → prefer `"propose"` for a novel algorithm, `"investigate"` / `"study"` / `"explore"` for an analysis, `"present"` for a system or dataset
 
@@ -588,6 +617,11 @@ Check for:
   - ❌ `"accurate wheel odometry assumes acceptable degrees of skidding"` (acceptable for what accuracy?)
   - ❌ `"The most consistent performance is obtained when N = 5"` (lowest variance across runs, or least spread across query conditions?)
 - **Uncertainty and variability** — robotics results averaged over few runs without variance, standard deviation, or number of trials reported (MAJOR in the main evaluation)
+- **Precision beyond measurement accuracy (MINOR)** — reported digits must not exceed what the measurement supports:
+  - ❌ cross-track error reported as `9.85 ± 13.94 cm` when the thesis itself states that the ground truth carries errors of "a few centimetres"
+  - ✔ round to the resolution the ground truth supports (e.g., `10 ± 14 cm`), and state the ground-truth accuracy once
+- **Skewed distributions summarised by mean ± std (MINOR)** — when the standard deviation is comparable to or larger than the mean (and the quantity is non-negative), the distribution is skewed; report the median and percentiles (or the maximum) instead of, or in addition to, mean ± std.
+- **Differences inside the noise (MAJOR)** — flag comparative claims (`"lower than"`, `"outperforms"`, `"consistently"`) that rest on one to three trials, or on differences smaller than the reported spread. Suggest reporting the number of trials and either softening the claim (`"comparable to"`) or adding repetitions or a statistical test.
 
 ---
 
@@ -625,6 +659,9 @@ Check each caption for:
   - **Baseline methods cited in the caption** — if a figure or table compares against other methods, each baseline must be cited directly in the caption (individually or as a grouped citation).
   - **Dataset names identified** — if results are shown per dataset or sequence, the dataset must be named or cited in the caption
 - **No duplication of body text** — captions must not summarize the method section paragraph
+- **Concise** — a caption should be a few sentences at most, not an essay; results discussion belongs in the text (MINOR for captions longer than about 80 words)
+- **No meta-openers** — never start with `"This figure shows ..."` or `"The figure illustrates ..."`; never write `"a photograph of the robot"` when `"the robot"` suffices
+- **Legend instead of prose** — for plots, a legend replaces caption text such as `"the red line shows X and the dashed blue line shows Y"`; describe colors in the caption only for images where a legend is impossible
 - **Tense consistency** within captions
 - **Period at end** of every full caption
 - **Caption style consistency across chapters** — theses by publication often mix IEEE-style (`"Fig. 3: ..."`, all-caps `"TABLE II"`) and other styles; the final thesis must use one style.
@@ -637,7 +674,8 @@ Check each caption for:
 - **Unreferenced figures (CRITICAL)** — every `\begin{figure}` must be cited at least once in the body text via `\ref{}`, `\cref{}`, `\Cref{}`, or `\autoref{}`. Scan every figure label and confirm it is referenced somewhere; flag any orphan figure as CRITICAL.
 - **Figure placement** (PDF required) — flag figures that appear more than one page after their first reference, or in a different section
 - Inconsistent figure reference style (`"Fig. 3.2"` vs `"Figure 3.2"` vs `"figure 3.2"`) — standardize across the thesis
-- **Consistent visual encoding across chapters** — the same method, baseline, or robot should have the same color and marker in every chapter's plots where practical (STYLE; MINOR if the same color means different methods in adjacent chapters)
+- **Consistent visual encoding within and across chapters** — the same method, baseline, trajectory type, or robot should have the same color and marker in every plot. Within a chapter, swapped colors between adjacent figures are MINOR and easy to miss: compare the color descriptions in every caption of the chapter (e.g., teach blue / repeat green / odometry red in one figure, but teach green / repeat blue / odometry orange in the next). Across chapters: STYLE; MINOR if the same color means different methods in adjacent chapters.
+- **Color-only encoding** — red/green or other color-only distinctions without a second cue (line style, marker shape) exclude color-blind readers (about 8% of men). Flag and point to `03_figure_feedback.md` for the detailed figure review.
 - **Scaling from two-column papers** — figures designed for a narrow IEEE column and scaled to the thesis text width often end up with oversized fonts, or wide figures scaled down end up with tiny fonts. In-figure fonts should be close to the caption font size and consistent across chapters.
 - **Tick label font size** — tick labels must remain legible at print size and should not be much smaller than axis labels
 - **Thousand separators in tick labels** — numeric tick labels ≥ 1000 should use thousand separators (`1,000`, `10,000`)
@@ -706,6 +744,11 @@ Check for the following patterns:
 | Paper-template leftovers | `\IEEEPARstart`, `\IEEEmembership`, `\thanks{}`, `\markboth`, `\begin{IEEEkeywords}` | remove or replace with thesis equivalents |
 | `~` meaning "approximately" | `repeated ~8 km routes` (`~` is a non-breaking space, so the PDF reads "repeated 8 km routes") | `approximately 8\,km` or `${\sim}8$\,km` (CRITICAL when the meaning is lost) |
 | `\approx` / `\sim` as a prefix without braces | `$\approx 36\%$`, `$\sim 8$\,km` (a relation symbol, so TeX inserts relation spacing after it) | `${\approx}36\%$`, `${\sim}8$\,km` (braces make it an ordinary symbol, with no gap before the number) |
+| Straight or mismatched quotes | `"robust"`, ``` ``robust" ```, `“robust”` in the source | ``` ``robust'' ``` |
+| Inter-sentence space after an abbreviation | `Liu et al. said`, `approx. 5\,m`, `vs. baseline` (LaTeX inserts a sentence-ending space after the period) | `Liu et al.~said`, `approx.\ 5\,m` (or the `\etal`, `\ie`, `\eg` macros) |
+| Units in italics or words in math | `$5 m$`, `$10 Hz$` (typeset as the variables m and H·z) | `5\,m`, `$5\,\mathrm{m}$`, or `\SI{5}{\metre}`; units are always upright |
+| Unit symbol in running prose | `"x is the distance in m"` | `"x is the distance in metres"`; use the symbol only after a number |
+| Float placement forced | `\begin{figure}[h]`, `[H]`, `[!ht]`, `[htbp]` everywhere | `[t]` (or the default) so floats go to the top of the page; `[H]` and `h` pull figures into the text flow and cause large gaps |
 | Manual layout hacks | `\vspace{-2mm}` around floats, `\\` to force line breaks in prose, `\newpage` to fix float placement | remove; a thesis has no page limit |
 
 **`\ie` and `\eg` macros:**
@@ -722,6 +765,19 @@ Check for the following patterns:
 ✅ "\ie the result"    ← correct
 ✅ "\eg KITTI"         ← correct
 ```
+
+**Equations in the text flow:**
+
+Equations are part of sentences, not separate objects. Check every displayed equation for:
+
+- **Grammar and punctuation (MINOR)** — the equation completes the sentence, so it takes a comma or a full stop where the sentence needs one. Do not put a colon before an equation:
+  - ❌ `"and the gain $\alpha$ is given by: $$\alpha = ...$$ where ..."`, or `"... is given by \eqref{eq:gain}."` followed by the equation
+  - ✔ `"The gain $$\alpha = \frac{XY}{Z},$$ where $X$ is ..., controls ..."`
+- **No blank line after the equation** unless a new paragraph genuinely starts: a blank line makes `"where ..."` a new, indented paragraph (MINOR)
+- **Symbols defined immediately after the equation**, with their domains where helpful (`$\mathbf{R} \in SO(3)$`, `$\mathbf{t} \in \mathbb{R}^3$`); flag symbols defined far from their first equation or not at all (see Category O)
+- **No forward references to equations** (`"as shown in \eqref{eq:later}"` before that equation appears) (MINOR)
+- **Number only the equations that are referenced** (STYLE): unreferenced numbered equations add clutter; use `equation*`/`align*` or `\nonumber`
+- **`\mathbb{R}`, not `\mathcal{R}` or bold R, for the real numbers**
 
 Also check:
 
@@ -744,6 +800,7 @@ Check that the abstract follows a WHY → PROBLEM/GAP → HOW → RESULTS → SI
 
 Additional checks:
 - **Length** — within the university's word or page limit if known (commonly 300–500 words or one page); flag if clearly exceeded
+- **Front-load the thesis's own work (MINOR; MAJOR if background exceeds about a third of the abstract)** — the reader should know what this thesis does within the first two or three sentences. Background about the field and what others do should not dominate: flag abstracts in which the first sentence about this thesis appears after the first third.
 - **Acronyms must be expanded in the abstract** — every acronym used in the abstract must be defined within the abstract itself, even if it is defined later in the thesis. Flag first use of any unexpanded acronym as MINOR.
 - Acronyms defined in the abstract are actually reused within the abstract (otherwise do not define them there)
 - **No citations** — the abstract must contain zero `\cite{}` calls. Flag any citation as CRITICAL.
@@ -768,6 +825,7 @@ Additional checks:
 - **Limitations** acknowledged at thesis level, not only per chapter
 - **Future work** is specific and grounded, not vague. Each direction should open with the proposal itself, not end with a disclaimer that it was not investigated (see Category C, statements that the context already makes). If present, it should start with a grounding sentence such as `"Despite these encouraging results, there is further space for improvement."` followed by concrete directions
 - No new experimental results or claims introduced for the first time
+- **Tense** — the conclusion reflects the abstract and introduction, but in the past tense for what the thesis did and found (`"This thesis showed ..."`, `"Chapter 3 demonstrated ..."`); flag mixed tenses.
 - **Broader impact** — where relevant for robotics (deployment, safety, societal or ethical considerations), briefly addressed
 
 ---
@@ -810,6 +868,11 @@ For each flagged symbol, suggest either:
 - Vectors use `\mathbf{}`: `\mathbf{x}`, `\mathbf{t}`, `\mathbf{p}`; matrices use `\mathbf{}` with capital letters: `\mathbf{R}`, `\mathbf{H}`; Greek vectors/matrices use `\boldsymbol{}`: `\boldsymbol{\mu}`, `\boldsymbol{\Sigma}`; scalars remain non-bold
 - Flag any place where a vector/matrix appears non-bold, and any place where a scalar is incorrectly bolded
 
+**Subscripts and superscripts:**
+- Keep them short, ideally a single letter; never a phrase.
+- Multi-letter text subscripts must be upright: `$x_{\text{max}}$` or `$x_{\mathrm{max}}$`, not `$x_{max}$`, which LaTeX sets as the product m·a·x in italics (MINOR, grouped).
+- Index subscripts (`$x_i$`, `$x_{ij}$`) stay italic.
+
 **Coordinate frame notation:**
 - One frame convention for the whole thesis (e.g., `\mathbf{T}_{WB}` maps points from body to world). Chapters derived from different papers frequently use different conventions; flag every chapter that deviates (MAJOR).
 - Verify that subscript order (source → target or target ← source) is consistent throughout
@@ -844,6 +907,10 @@ Hyphenation errors are extremely common and follow clear rules that can be syste
 ❌ "jointly-optimized"   →  ✅ "jointly optimized"
 ❌ "highly-accurate"     →  ✅ "highly accurate"
 ```
+
+**Rule 3 — Same words as a noun: no hyphen**
+
+A compound is hyphenated only when it acts as an adjective before a noun: `"the pseudo inverse is ..."` (noun) but `"a pseudo-inverse solution"` (adjective); `"zero mean"` but `"a zero-mean signal"`; `"in real time"` but `"a real-time system"`. Words with the prefix `non` (`nonlinear`, `nonholonomic`, `nonmonotonic`) are usually closed up without a hyphen; there is no universal agreement, so require consistency rather than one form.
 
 **Common patterns to flag in robotics theses:**
 
@@ -887,6 +954,11 @@ Hyphenation errors are extremely common and follow clear rules that can be syste
 
 - Every appendix is referenced at least once from the main text (MINOR if orphaned).
 - Content essential to evaluating a contribution should not live only in an appendix.
+
+**Datasets, code, and licences:**
+
+- Every public dataset, pre-trained model, and third-party code base used must be cited as its authors request, and used within its licence (e.g., non-commercial or share-alike terms) (MINOR; verify manually).
+- Datasets and code released by the candidate should state their licence and a persistent location (DOI or archived repository) in the thesis, not only a URL (MINOR).
 
 **Bibliography:**
 

@@ -95,6 +95,8 @@ Check for:
 - Passive voice overuse where active voice is clearer
 - Missing Oxford comma in enumerations (e.g., `"size, weight, and orientation"`)
 - Comma splices and run-on sentences
+- **List punctuation** — a colon introduces a list; items that contain commas are separated by semicolons (`"three settings: low, as in X; default; and high, as in Y"`). In `itemize` lists, use one convention: full sentences ending with full stops, or fragments separated by semicolons with the last item ending in a full stop
+- **Eponyms are capitalised** — `Gaussian`, `Euclidean`, `Jacobian`, `Hessian`, `Mahalanobis`, `Voronoi`, `Kalman`, `Bayesian`, `Markov`, `Fourier`, `Cartesian`; do not capitalise ordinary words by analogy (`"cosine distance"`)
 
 ---
 
@@ -189,6 +191,7 @@ Check for:
 #### Introduction
 
 - **Main contribution paragraph** — verify there is a dedicated paragraph that explicitly starts with or centers on the main contribution. The reader must not have to infer it.
+- **Name the contributions** — use the word "contribution" explicitly (`"Our main contributions are: ..."`) so that reviewers can find and quote them.
 
 #### Related Work
 
@@ -207,6 +210,14 @@ Check for:
 - **Narrative build-up** — an equation reference must be accompanied by enough surrounding context for the reader to understand what is being claimed. Flagging cases where an equation number appears in a sentence but the variables in it are not explained or pointed to:
   - ❌ `"This is achieved by optimizing \eqref{eq:loss}."` (no explanation of what the optimization achieves or what the terms are)
   - ✔ `"We minimize \eqref{eq:loss}, where $\lambda$ controls the trade-off between reconstruction and regularization."`
+
+**Equations in the text flow** — equations are part of sentences:
+- The equation completes the sentence and takes a comma or full stop where the sentence needs one; do not put a colon before an equation
+  - ❌ `"and the gain $\alpha$ is given by: $$\alpha = ...$$"` or `"... is given by (1)."` followed by the equation
+  - ✔ `"The gain $$\alpha = \frac{XY}{Z},$$ where $X$ is ..., controls ..."`
+- No blank line after the equation unless a new paragraph starts (otherwise `"where ..."` becomes an indented new paragraph)
+- Define every symbol immediately after the equation, with its domain where helpful (`$\mathbf{R} \in SO(3)$`, `$\mathbf{t} \in \mathbb{R}^3$`)
+- No forward references to equations; number only the equations that are referenced later
 
 #### Experimental Evaluation
 
@@ -250,6 +261,9 @@ Check each caption for:
     - ✔ `"Comparison against baseline approaches~\cite{lim2022quatro,yang2021teaser,lim2025kissmatcher}."` (grouped citation also acceptable)
   - **Dataset names identified** — if results are shown per dataset or sequence, the dataset must be named or cited in the caption
 - **No duplication of body text** — captions must not summarize the method section paragraph
+- **Concise** — a few sentences at most, not an essay
+- **No meta-openers** — never start with `"This figure shows ..."`; never write `"a photograph of the robot"` when `"the robot"` suffices
+- **Legend instead of prose** — for plots, use a legend rather than caption text such as `"the red line shows X and the dashed blue line shows Y"`
 - **Tense consistency** within captions
 - **Period at end** of every caption
 
@@ -276,6 +290,10 @@ Check each caption for:
 - Consistent metric names across all tables
 - Units included in column headers
 - `\hline` instead of `\toprule`/`\midrule`/`\bottomrule` — flag if venue uses booktabs style
+
+#### Float Placement
+
+- Let floats float: use `[t]` (or the default) so figures and tables go to the top of a column or page. `[h]`, `[H]`, and `[htbp]` pull floats into the text flow, create uneven white space, and cost space (MINOR)
 
 #### Reference Order
 
@@ -316,6 +334,11 @@ Check for the following patterns:
 | Inconsistent figure reference | `Figure 3` vs `Fig. 3` | standardize to one style |
 | Equation reference style | `equation (3)`, `Eq. 3` | `\Cref{eq:xxx}`. The output should be either (3) or Eq. (3)|
 | Unit without thin space | `6.1m × 6.1m` | `6.1\,m $\times$ 6.1\,m` |
+| Units in italics | `$5 m$`, `$10 Hz$` | `5\,m` or `$5\,\mathrm{m}$`; units are always upright |
+| Unit symbol in prose | `"x is the distance in m"` | `"x is the distance in metres"`; symbols only after numbers |
+| Straight or mismatched quotes | `"robust"`, ``` ``robust" ``` | ``` ``robust'' ``` |
+| Inter-sentence space after abbreviation | `Liu et al. said`, `vs. X` | `Liu et al.~said` (or `\etal`, `\ie`, `\eg` macros) |
+| Unprotected capitals in BibTeX titles | `title = {Visual SLAM for AUVs}` → typeset as "slam", "auvs" | `title = {Visual {SLAM} for {AUV}s}` |
 | Missing Oxford comma | `size, foo, bar and orientation` | `size, foo, bar, and orientation` |
 | bare `i.e.` or `e.g.` | `i.e., the result` / `e.g., KITTI` | use `\ie` / `\eg` macros (see below) |
 | `et al.` without period | `et al ` | `et al.` |
@@ -351,6 +374,7 @@ Also check:
 Check that the abstract follows the WHY → PROBLEM → HOW → RESULTS structure:
 
 - **WHY** (1–2 sentences): answers "why is this relevant? why should I care?" — sets the motivation without deep technical detail
+- Keep the WHY short: a reader looking for papers on the topic must learn what *this* paper does within the first two or three sentences, and the abstract should not become a summary of what everybody else does. Some advisors prefer starting directly with `"In this paper, we present ..."`; either is acceptable if the paper's own work is front-loaded
 - **PROBLEM** (1 sentence): clearly states the specific problem the paper addresses, starting with something like "In this paper, we address the problem of..."
 - **HOW & WHAT** (~3 sentences): how the problem is approached in general, what is new, what makes the contribution special
 - **RESULTS** (1 sentence): key outcome or result of the work
@@ -371,6 +395,7 @@ Additional checks:
 - Limitations acknowledged (even briefly)
 - Future work is specific, not vague — if present, it should start with: `"Despite these encouraging results, there is further space for improvement."` Flag if future work is mentioned without this grounding sentence or without specific directions
 - No new experimental results or claims introduced for the first time
+- Past tense for what the paper did (`"In this paper, we showed ..."`), mirroring the abstract and introduction
 
 ---
 
@@ -409,6 +434,11 @@ For each flagged symbol, suggest either:
   - Random vectors or special cases use `\boldsymbol{}` when the symbol is Greek: `\boldsymbol{\mu}`, `\boldsymbol{\Sigma}`
   - Scalars remain non-bold: `d`, `n`, `\lambda`
 - Flag any place where a vector/matrix appears non-bold in an equation, and any place where a scalar is incorrectly bolded
+
+**Subscripts:**
+- Keep subscripts short, ideally a single letter, never a phrase
+- Multi-letter text subscripts must be upright (`$x_{\text{max}}$` or `$x_{\mathrm{max}}$`); `$x_{max}$` is set as the product m·a·x in italics
+- Use `\mathbb{R}` for the real numbers, not `\mathcal{R}`
 
 **Coordinate frame notation:**
 - Flag inconsistent frame notation styles used for the same transformation:
@@ -452,6 +482,10 @@ When the first word is an adverb ending in **-ly**, no hyphen is used regardless
 ❌ "locally-consistent"  →  ✅ "locally consistent"
 ❌ "sparsely-connected"  →  ✅ "sparsely connected"
 ```
+
+**Rule 3 — Same words as a noun: no hyphen**
+
+A compound is hyphenated only when it acts as an adjective before a noun: `"the pseudo inverse is ..."` (noun) but `"a pseudo-inverse solution"` (adjective); `"zero mean"` but `"a zero-mean signal"`; `"in real time"` but `"a real-time system"`. Words with the prefix `non` (`nonlinear`, `nonholonomic`, `nonmonotonic`) are usually closed up without a hyphen; there is no universal agreement, so require consistency rather than one form.
 
 **Common patterns to flag in robotics/CV papers:**
 
