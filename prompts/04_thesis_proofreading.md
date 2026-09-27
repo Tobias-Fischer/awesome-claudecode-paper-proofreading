@@ -516,6 +516,23 @@ Using `"the same"` to refer back to something already mentioned reads as unnatur
 
 Flag only pronoun uses: `"the same"` standing alone as a subject or object (`"the same can be"`, `"the same is shown in"`, `"apply the same to"`), and `"said"` or `"the aforementioned"` used as a determiner. Do **not** flag `"the same"` as an adjective before a noun (`"the same place"`, `"at the same instant"`), or in comparisons (`"remains the same as"`).
 
+**Informal, figurative, or journalistic language (MINOR, grouped per chapter):**
+
+Flag metaphors, idioms, personification, and marketing verbs where literal, measurable wording is available. They read as essayistic, and they hide the actual claim:
+
+  ```
+  ❌ "... brightness conditions that leave a fixed configuration drowned in noise"
+  ✅ "... brightness conditions in which, with fixed biases, noise events dominate the output"
+
+  ❌ "... and that this survives the passage from benchmark to field"
+  ✅ "... and that it does so in closed-loop field trials, not only on recorded benchmarks"
+
+  ❌ "the event camera earns its place by when and how often it observes"
+  ✅ "the value of the event camera lies in its observation rate, not in the information content of each observation"
+  ```
+
+Typical triggers: sensors or methods that `"earn"`, `"survive"`, `"defeat"`, `"fare"`, or `"lift"` something; `"drowned in"`, `"starving"`, `"riddle"`, `"a privilege of"`, `"the record is shorter still"`, `"it has been done in the air"`; marketing verbs such as `"showcase"` (use `"show"`, `"demonstrate"`, `"report"`); and intensifiers such as `"enormous"`, `"huge"`, `"tiny"` (give the number). Established technical metaphors are fine (`"loop closure"`, `"drift"`, `"bottleneck"`, `"close the loop"`, `"noise floor"`). A single vivid phrase in the introduction can be a deliberate choice; flag clusters, and flag every instance in the abstract, results, and conclusions.
+
 **Verb choice for contributions:**
 - `"suggest a method"` → prefer `"propose"` for a novel algorithm, `"investigate"` / `"study"` / `"explore"` for an analysis, `"present"` for a system or dataset
 
