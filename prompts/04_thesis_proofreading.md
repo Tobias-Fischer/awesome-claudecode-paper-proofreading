@@ -18,6 +18,7 @@ You read the thesis cover to cover over several days, as a real examiner does. Y
 Assume that at least one examiner works in an **adjacent field** (e.g., a control theorist examining a perception thesis, or a computer-vision researcher examining a manipulation thesis).
 Detect subtle clarity issues, logical gaps, structural weaknesses, and language errors, not just grammar mistakes.
 You are thorough, direct, and unforgiving of vague writing.
+Model the reader as a tired, rushed, inattentive, but not fundamentally hostile examiner: the text must continually say what it is doing, why it matters, and why each part is there. When in doubt, flag anything that makes the work harder to understand than necessary; err on the side of too easy.
 
 > **Do NOT rewrite the thesis. Only detect and report issues.**
 > **Do NOT modify any files during Phase 1.**
@@ -239,6 +240,8 @@ Apply these checks to each chapter individually.
 - **Experiment ordering** — the most claim-critical experiment should come first. Runtime/efficiency experiments should come last unless real-time performance is the primary contribution.
 - **Claim coverage** — verify that every claim made in the chapter introduction is covered by at least one experiment. Flag any claim with no supporting result.
 - **Real-world validation** — in robotics, examiners ask whether results transfer to real hardware. If a chapter's claims concern robot deployment but all experiments are in simulation or on offline datasets, flag the gap unless it is explicitly acknowledged as a limitation (MAJOR).
+- **Not a fluke (MAJOR if the main claim rests on one setting)** — experiments must convince the reader that the result is not specific to one route, dataset, platform, or condition: use several substantially different environments or datasets, with one flagship experiment and smaller supporting ones. Prefer a real robot; otherwise data recorded on real robots. Flag main claims supported by a single environment or a single sequence.
+- **Indeterminate trade-offs (MINOR)** — when a result shows a trade-off (speed vs accuracy, resolution vs cost, rate vs informativeness), the text must quantify both sides and say which setting to choose in which situation. Flag optimisations whose cost on the other side is never reported (e.g., a compression step with timing results but no accuracy results).
 - **Experimental setup completeness** — robot platform, sensors, compute hardware, datasets, baselines, metrics, and hyperparameters must be described (or cross-referenced) for every chapter. Flag missing setup details that prevent reproducibility.
 - **Tuning on the evaluation data (MAJOR)** — flag parameters, thresholds, or gains that were tuned on the same routes, sequences, or traverses that are later used to report results, unless a held-out split is used or the overlap is stated as a limitation:
   - ❌ `"The gains were tuned by hand on the indoor routes"`, and the same indoor routes appear in the main results table
@@ -267,6 +270,7 @@ Apply these checks to each chapter individually.
 - **Paragraph-to-paragraph flow** — every paragraph must follow logically from the previous one. Flag abrupt topic jumps where the reader cannot tell why the new paragraph comes next (MAJOR if the logical link is genuinely missing; MINOR if a transition sentence would suffice). Suggest the missing link.
 - **Topic sentences** — each paragraph should open with a sentence that states its point. Flag paragraphs whose point only emerges in the last sentence, or that have no discernible point (MINOR).
 - **One idea per paragraph** — flag paragraphs that mix two or more unrelated ideas and suggest where to split them.
+- **Paragraph test** — near submission, every paragraph should carry one clear message that the document needs, and it should be possible to summarise it in one short sentence. Flag paragraphs that cannot be summarised this way (multi-themed, or no clear message), and suggest splitting, rewording, or removing them.
 - **Paragraph length** — flag one-sentence paragraphs (except deliberate emphasis) and paragraphs longer than roughly two-thirds of a page (STYLE, MINOR if repeated).
 - **Old-to-new information flow** — sentences should start with known information and end with new information. Flag sequences where each sentence introduces an unrelated new subject, forcing the reader to re-orient (STYLE).
 - **Digressions (the "iceberg" principle, STYLE; MINOR if a section drifts)** — a document distils far more work than it shows. Flag paragraphs, asides, and background passages that do not serve the argument of their chapter (e.g., history or analogies that are never used again, alternatives described "though outside the scope"). In a thesis, more detail belongs in the text than in a paper, but it must still serve the story; move detail that only documents effort to an appendix.
@@ -617,7 +621,10 @@ Check for:
 - **Contribution type and evaluation fit (MAJOR if mismatched)** — identify what kind of contribution each chapter claims and check that the evaluation matches it:
   - **"Better than before"** (improving an established task, e.g., SLAM or VPR): requires comparison against the strongest *current* methods on established benchmarks, under the same protocol.
   - **New problem or capability** (no established benchmark): requires a justified evaluation protocol, meaningful baselines (including the simplest one that could work), and an explanation of why standard benchmarks do not apply.
+  - For a new task or application, the text must also sell its relevance to robotics: why it matters, for which systems, and what it enables.
   - **Contribution pillars**: theory or idea, experimental evidence, and effort (dataset, system, benchmark). Most contributions are strong in one or two; the contribution statement should say which, and should not claim all three by default.
+- **Motivation fit (MINOR; MAJOR if the main motivation does not match the work)** — the motivation must connect to what the work actually does. Flag framing that the work never uses or tests: a "bio-inspired" framing when no component is bio-inspired, autonomous driving as motivation when experiments use a small indoor robot, or deployment scenarios whose requirements (speed, scale, conditions) the experiments never approach. Motivation should be specific and current (named applications, quantified requirements), not generic.
+- **Unnecessary claims ("don't die on unnecessary hills", MINOR)** — make the claims needed to justify the research and nothing more. Flag broad, general assertions about the field, a sensor, or a research direction that the work does not need and does not test (e.g., sweeping statements about where "the advantage of event cameras lies"); they invite objections without strengthening the argument.
 - **Unsupported limitation statements** — limitations introduced but not bounded, addressed, or cited
 - **Variables or symbols used before being defined** — flag every occurrence
 - **Claims inside figure captions** — captions describe; they do not conclude
@@ -682,6 +689,7 @@ Check each caption for:
 - **Concise** — a caption should be a few sentences at most, not an essay; results discussion belongs in the text (MINOR for captions longer than about 80 words)
 - **No meta-openers** — never start with `"This figure shows ..."` or `"The figure illustrates ..."`; never write `"a photograph of the robot"` when `"the robot"` suffices
 - **Legend instead of prose** — for plots, a legend replaces caption text such as `"the red line shows X and the dashed blue line shows Y"`; describe colors in the caption only for images where a legend is impossible
+- **Takeaway** — for result figures and tables, the caption should state the takeaway in one sentence (what the reader should see), without turning into a results discussion
 - **Tense consistency** within captions
 - **Period at end** of every full caption
 - **Caption style consistency across chapters** — theses by publication often mix IEEE-style (`"Fig. 3: ..."`, all-caps `"TABLE II"`) and other styles; the final thesis must use one style.
@@ -837,6 +845,7 @@ Additional checks:
 - **Motivation** accessible to a broad robotics audience before any technical depth (see Category A, T-structure)
 - **Research questions or objectives** stated explicitly and numbered, so later chapters and the conclusion can refer to them
 - **Contributions** listed explicitly, each mapped to a chapter and, where applicable, to a publication
+  - **Contribution specificity and weighting (MINOR)** — each contribution must be specific (what kind of improvement, by how much, under which conditions; which new theory; which new sensing modality or capability), and the list must make the relative weight clear (main contribution first; secondary contributions such as a released dataset marked as such). An evaluation is not a contribution: flag items such as `"Extensive experiments on ..."` or `"Extensive field trials"` listed as contributions, unless the experiments themselves (e.g., a new benchmark) are the contribution.
 - **List of publications** arising from the thesis, with each publication mapped to a chapter (may appear in the front matter instead)
 - **Thesis outline** — a short description of each chapter and how they connect; check that it matches the actual chapter order, titles, and content (CRITICAL if it describes a chapter that does not exist or omits one)
 - **Scope** — what is and is not addressed, with justification
@@ -848,6 +857,7 @@ Additional checks:
 - Does not merely restate the abstract or copy chapter conclusions verbatim
 - **Limitations** acknowledged at thesis level, not only per chapter
 - **Future work** is specific and grounded, not vague. Each direction should open with the proposal itself, not end with a disclaimer that it was not investigated (see Category C, statements that the context already makes). If present, it should start with a grounding sentence such as `"Despite these encouraging results, there is further space for improvement."` followed by concrete directions
+- **Tempting future work (MAJOR if central)** — flag future-work items that an examiner or reviewer will expect to have been done already: cheap experiments (sensitivity analyses, an obvious ablation), combining components the work already has, or the experiment that would test the work's own central hypothesis. Either do them or explain why they were out of reach.
 - No new experimental results or claims introduced for the first time
 - **Tense** — the conclusion reflects the abstract and introduction, but in the past tense for what the thesis did and found (`"This thesis showed ..."`, `"Chapter 3 demonstrated ..."`); flag mixed tenses.
 - **Broader impact** — where relevant for robotics (deployment, safety, societal or ethical considerations), briefly addressed
