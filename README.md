@@ -85,6 +85,26 @@ ______________________________________________________________________
 | I–P | Paper checks adapted to theses: language, paper leftovers ("in this paper"), claims, captions (short captions, attribution of reused figures), LaTeX, abstract/intro/conclusion, notation, hyphenation |
 | Q | Front matter, back matter, and bibliography: statements of contribution, publication notices, appendices |
 
+### [`prompts/05_highimpact_proofreading.md`](prompts/05_highimpact_proofreading.md)
+
+**High-impact journal proofreading** — for Science Robotics, Science, Nature, Nature Machine Intelligence, and Nature Communications, from the perspective of the handling editor and three referees (domain expert, adjacent-field roboticist, broad reader). Self-contained; distilled from published neuromorphic and event-based robot vision papers, a Nature Masterclass, and real referee reports.
+
+| Category | Description |
+|----------|-------------|
+| — | Story card: the advance in one sentence, breadth, "first" claim and evidence, headline numbers, top referee objections |
+| A | Editorial triage: advance, significance, breadth of interest, the two-minute editor test |
+| B | Article architecture: Intro → Results → Discussion → Methods, no Related Work section, required statements, length (verify against the guide) |
+| C | Title, one-sentence summary, abstract ("Nature formula", headline numbers, honest comparisons) |
+| D | Introduction funnel: broad hook, accessibility, concrete gap, "why this route", "Here we" |
+| E | Results narrative: overview first, descriptive headings, aim → finding → meaning, failures, honest baselines |
+| F | Claims and rigour: overclaiming ("first", "accurate", "scalable"), baselines and fairness, attribution, statistics |
+| G | Domain module (toggleable): neuromorphic and event-based robot vision, energy and latency accounting, bio-inspiration |
+| H | Discussion: recap, meaning, the major question, limitations, future, closing without hype |
+| I | Figures, movies, captions: Figure 1 concept, bold caption titles, cross-references |
+| J | Materials and Methods, supplement, data/code availability, statements |
+| K–L | Language for a broad readership; numbers, units, notation, LaTeX, hyphenation |
+| M | Submission package: cover letter, response to reviewers |
+
 ______________________________________________________________________
 
 ## :hammer: How to Use
@@ -155,6 +175,18 @@ For a PhD thesis, use the thesis prompt instead of the paper prompt in Step 3. P
 ```
 
 For long theses, `thesis-level only` and `show chapter X only` keep the review focused.
+
+### Step 5b (high-impact journals) — Run the high-impact proofreader
+
+For Science Robotics, Science, Nature, or Nature Machine Intelligence submissions, use the high-impact prompt instead of the paper prompt in Step 3. Provide the root `.tex` file, the compiled PDF, and, if available, the supplement, the cover letter, and the journal's current guide to authors (its limits override the prompt's defaults):
+
+```text
+@~/awesome-claudecode-paper-proofreading/prompts/05_highimpact_proofreading.md
+
+@main.tex @paper.pdf @cover_letter.tex
+```
+
+`show category A only` gives a quick editorial triage (would the paper be sent to review?) before the full review. Disable Category G for papers outside neuromorphic and event-based robot vision.
 
 ### Option 2 — Codex workspace setup with `prompts/`
 
