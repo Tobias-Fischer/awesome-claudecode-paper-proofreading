@@ -105,6 +105,26 @@ ______________________________________________________________________
 | K–L | Language for a broad readership; numbers, units, notation, LaTeX, hyphenation |
 | M | Submission package: cover letter, response to reviewers |
 
+### [`prompts/06_perspective_proofreading.md`](prompts/06_perspective_proofreading.md)
+
+**Perspective article proofreading (ecology and evolution)** — for Nature Ecology & Evolution Perspectives and similar opinion-led formats, from the perspective of the handling editor and three referees (subfield expert, ecologist from another subfield, applied reader). Self-contained; distilled from published Nature Ecology & Evolution Perspectives, the journal's format guidelines, and a Nature Masterclass.
+
+| Category | Description |
+|----------|-------------|
+| — | Argument card: thesis in one sentence, Perspective type, novelty, why now, who cares, evidence breadth, counter-argument, forward look |
+| A | Editorial triage: clear thesis, Perspective versus review, novelty, timeliness, breadth, the two-minute editor test |
+| B | Format: 3,000–4,000 words, 4–6 display items (boxes count), no footnotes, ≤ 100 references, architecture, statements |
+| C | Title and standfirst (stake → tension → "Here we" → moves → implication) |
+| D | Introduction: concrete opening, concept defined against the established one, gap, "Here we" with roadmap |
+| E | Argument structure: one argument built step by step, frameworks, theory, running example, ending |
+| F | Balance, evidence, and hedging: counter-arguments, breadth of examples, calibrated language, equity |
+| G | Forward look: roadmap, open questions, testable predictions, recommendations with named actors |
+| H | Display items: concept figure, synthesis table, case-study and technical boxes, credits |
+| I | References and intellectual heritage: crediting related concepts, citation fit, self-citation |
+| J | Domain module (toggleable): aquatic and marine ecology and conservation policy |
+| K–L | Language for a broad ecology readership; nomenclature, numbers, LaTeX, hyphenation |
+| M | Pitch (presubmission enquiry) and submission package |
+
 ______________________________________________________________________
 
 ## :hammer: How to Use
@@ -187,6 +207,18 @@ For Science Robotics, Science, Nature, or Nature Machine Intelligence submission
 ```
 
 `show category A only` gives a quick editorial triage (would the paper be sent to review?) before the full review. Disable Category G for papers outside neuromorphic and event-based robot vision.
+
+### Step 5c (Perspectives) — Run the Perspective proofreader
+
+For a Perspective (e.g., Nature Ecology & Evolution), use the Perspective prompt. Provide the root `.tex` file, the compiled PDF, and, if available, the pitch (presubmission enquiry) and any editor instructions (they override the prompt's defaults):
+
+```text
+@~/awesome-claudecode-paper-proofreading/prompts/06_perspective_proofreading.md
+
+@main_perspective.tex @perspective.pdf @pe-presubmission_enquiry.md
+```
+
+`show category M only` checks the pitch on its own before it is sent. Disable Category J for Perspectives outside aquatic and marine ecology and conservation policy.
 
 ### Option 2 — Codex workspace setup with `prompts/`
 
